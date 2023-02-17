@@ -2,6 +2,12 @@ library(httr)
 library(rvest)
 library(stringr)
 
+#' Uses an IMO number to obtain information about a vesel
+#' 
+#' @param imo International Maritime Organisation number
+#' 
+#' @return Array of info describing the vessel
+#' @export
 from_imo <- function(imo){
     url <- paste("https://www.vesselfinder.com/vessels/details/", imo, "/", sep="")
 
@@ -34,6 +40,12 @@ from_imo <- function(imo){
     return(info)
 }
 
+#' Uses a vessel's name to obtain information about a vesel
+#' 
+#' @param name The name of a vessel
+#' 
+#' @return Array of info describing the vessel
+#' @export
 from_name <- function(name){
     url <- "https://www.vesselfinder.com/vessels"
 
