@@ -9,6 +9,10 @@ Author: Shivan Prasad [aut, cre]
 Description: Using the vessel name, information such as the IMO number, ship type,
     build year, and other information can be returned. When using the IMO number,
     the vessel name and additional information will be returned.
+Imports:
+    httr,
+    rvest,
+    stringr
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
