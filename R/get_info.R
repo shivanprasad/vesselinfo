@@ -8,7 +8,7 @@ library(stringr)
 #' 
 #' @return Array of info describing the vessel
 #' 
-#' @importFrom httr user_agent
+#' @importFrom httr GET user_agent
 #' @importFrom rvest read_html html_text session html_form html_form_set session_submit session_follow_link
 #' @importFrom stringr str_split_fixed
 #' @export
