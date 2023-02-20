@@ -7,6 +7,10 @@ library(stringr)
 #' @param imo International Maritime Organisation number
 #' 
 #' @return Array of info describing the vessel
+#' 
+#' @importFrom httr user_agent
+#' @importFrom rvest read_html html_text session html_form html_form_set session_submit session_follow_link
+#' @importFrom stringr str_split_fixed
 #' @export
 from_imo <- function(imo){
     url <- paste("https://www.vesselfinder.com/vessels/details/", imo, "/", sep="")
