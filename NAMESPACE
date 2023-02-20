@@ -2,6 +2,7 @@
 
 export(from_imo)
 export(from_name)
+importFrom(dplyr,"%>%")
 importFrom(httr,GET)
 importFrom(httr,user_agent)
 importFrom(rvest,html_form)

@@ -5,6 +5,7 @@
 #' @return Array of info describing the vessel
 #' 
 #' @importFrom httr GET user_agent
+#' @importFrom dplyr %>%
 #' @importFrom rvest read_html html_text session html_form html_form_set session_submit session_follow_link
 #' @importFrom stringr str_split_fixed
 #' @export

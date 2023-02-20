@@ -10,6 +10,7 @@ Description: Using the vessel name, information such as the IMO number, ship typ
     build year, and other information can be returned. When using the IMO number,
     the vessel name and additional information will be returned.
 Imports:
+    dplyr,
     httr,
     rvest,
     stringr
