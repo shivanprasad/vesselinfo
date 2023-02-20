@@ -3,10 +3,22 @@
 #' @param imo International Maritime Organisation number
 #' 
 #' @return Array of info describing the vessel
+#' \itemize{
+#'   \item imo - A unique seven-digit number assigned to identify it internationally.
+#'   \item mmsi - (Maritime Mobile Service Identity) is a nine-digit number used for identifying and communicating with vessels via VHF radio or satellite.
+#'   \item callsign - A unique combination of letters and numbers used to identify the vessel in communications and can be used to track the vessel's movement.
+#'   \item flag - Represents the country in which it is registered and provides information about the vessel's ownership and the laws and regulations under which it operates.
+#'   \item vessel_name - A distinctive name given to the ship, which is used for identification purposes and to establish ownership.
+#'   \item year_built - Provides information on the age of the ship, which can affect its condition, safety features, and compliance with current regulations.
+#'   \item length - The length of a vessel provides important information about its size and capacity, which affects its stability, maneuverability, and suitability for different types of cargo.
+#'   \item beam - Provides information about the maximum width of the ship, which is useful in determining its stability, speed and cargo capacity.
+#'   \item gross_tonnage - Provides information about the ship's carrying capacity and volume, and is used to calculate various fees and taxes.
+#'   \item summer_dwt - A measure of its carrying capacity and indicates the maximum weight of cargo and supplies that the ship can safely transport during the summer months.
+#' }
 #' 
 #' @importFrom httr GET user_agent
 #' @importFrom dplyr %>%
-#' @importFrom rvest read_html html_element html_text session html_form html_form_set session_submit session_follow_link
+#' @importFrom rvest read_html html_element html_text html_form html_form_set 
 #' @importFrom stringr str_split_fixed
 #' @export
 from_imo <- function(imo){
@@ -43,9 +55,26 @@ from_imo <- function(imo){
 
 #' Uses a vessel's name to obtain information about a vesel
 #' 
-#' @param name The name of a vessel
+#' @param name Name of vessel
 #' 
 #' @return Array of info describing the vessel
+#' \itemize{
+#'   \item imo - A unique seven-digit number assigned to identify it internationally.
+#'   \item mmsi - (Maritime Mobile Service Identity) is a nine-digit number used for identifying and communicating with vessels via VHF radio or satellite.
+#'   \item callsign - A unique combination of letters and numbers used to identify the vessel in communications and can be used to track the vessel's movement.
+#'   \item flag - Represents the country in which it is registered and provides information about the vessel's ownership and the laws and regulations under which it operates.
+#'   \item vessel_name - A distinctive name given to the ship, which is used for identification purposes and to establish ownership.
+#'   \item year_built - Provides information on the age of the ship, which can affect its condition, safety features, and compliance with current regulations.
+#'   \item length - The length of a vessel provides important information about its size and capacity, which affects its stability, maneuverability, and suitability for different types of cargo.
+#'   \item beam - Provides information about the maximum width of the ship, which is useful in determining its stability, speed and cargo capacity.
+#'   \item gross_tonnage - Provides information about the ship's carrying capacity and volume, and is used to calculate various fees and taxes.
+#'   \item summer_dwt - A measure of its carrying capacity and indicates the maximum weight of cargo and supplies that the ship can safely transport during the summer months.
+#' }
+#' 
+#' @importFrom httr user_agent
+#' @importFrom dplyr %>%
+#' @importFrom rvest read_html html_element html_text session html_form html_form_set session_submit session_follow_link
+#' @importFrom stringr str_split_fixed
 #' @export
 from_name <- function(name){
     url <- "https://www.vesselfinder.com/vessels"
