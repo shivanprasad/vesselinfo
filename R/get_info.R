@@ -1,7 +1,3 @@
-library(httr)
-library(rvest)
-library(stringr)
-
 #' Uses an IMO number to obtain information about a vesel
 #' 
 #' @param imo International Maritime Organisation number
