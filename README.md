@@ -17,7 +17,6 @@ build year, and other information will be returned.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * devtools
   ```sh
   install.packages("devtools")
