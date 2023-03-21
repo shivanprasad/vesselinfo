@@ -10,7 +10,9 @@ from_name(name)
 \item{name}{Name of vessel}
 }
 \value{
-Array of info describing the vessel
+0: no ships found
+1: multiple ships found
+otherwise: Array of info describing the vessel
 \itemize{
 \item imo - A unique seven-digit number assigned to identify it internationally.
 \item mmsi - (Maritime Mobile Service Identity) is a nine-digit number used for identifying and communicating with vessels via VHF radio or satellite.
