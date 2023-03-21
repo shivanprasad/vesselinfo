@@ -2,10 +2,10 @@ Package: vesselinfo
 Title: Provides Vessel Information
 Version: 0.0.0.9000
 Authors@R: 
-    person("Shivan", "Prasad", , "first.last@example.com", role = c("aut", "cre"),
+    person("Shivan", "Prasad", , "example@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Author: Shivan Prasad [aut, cre]
-# Maintainer: Shivan Prasad <test@gmail.com>
+# Maintainer: Shivan Prasad <example@gmail.com>
 Description: Using the vessel name, information such as the IMO number, ship type,
     build year, and other information can be returned. When using the IMO number,
     the vessel name and additional information will be returned.
