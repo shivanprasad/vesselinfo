@@ -57,19 +57,21 @@ from_imo <- function(imo){
 #' 
 #' @param name Name of vessel
 #' 
-#' @return Array of info describing the vessel
-#' \itemize{
-#'   \item imo - A unique seven-digit number assigned to identify it internationally.
-#'   \item mmsi - (Maritime Mobile Service Identity) is a nine-digit number used for identifying and communicating with vessels via VHF radio or satellite.
-#'   \item callsign - A unique combination of letters and numbers used to identify the vessel in communications and can be used to track the vessel's movement.
-#'   \item flag - Represents the country in which it is registered and provides information about the vessel's ownership and the laws and regulations under which it operates.
-#'   \item vessel_name - A distinctive name given to the ship, which is used for identification purposes and to establish ownership.
-#'   \item year_built - Provides information on the age of the ship, which can affect its condition, safety features, and compliance with current regulations.
-#'   \item length - The length of a vessel provides important information about its size and capacity, which affects its stability, maneuverability, and suitability for different types of cargo.
-#'   \item beam - Provides information about the maximum width of the ship, which is useful in determining its stability, speed and cargo capacity.
-#'   \item gross_tonnage - Provides information about the ship's carrying capacity and volume, and is used to calculate various fees and taxes.
-#'   \item summer_dwt - A measure of its carrying capacity and indicates the maximum weight of cargo and supplies that the ship can safely transport during the summer months.
-#' }
+#' @return 0: no ships found
+#' 1: multiple ships found
+#' otherwise: Array of info describing the vessel
+#'     \itemize{
+#'       \item imo - A unique seven-digit number assigned to identify it internationally.
+#'       \item mmsi - (Maritime Mobile Service Identity) is a nine-digit number used for identifying and communicating with vessels via VHF radio or satellite.
+#'       \item callsign - A unique combination of letters and numbers used to identify the vessel in communications and can be used to track the vessel's movement.
+#'       \item flag - Represents the country in which it is registered and provides information about the vessel's ownership and the laws and regulations under which it operates.
+#'       \item vessel_name - A distinctive name given to the ship, which is used for identification purposes and to establish ownership.
+#'       \item year_built - Provides information on the age of the ship, which can affect its condition, safety features, and compliance with current regulations.
+#'       \item length - The length of a vessel provides important information about its size and capacity, which affects its stability, maneuverability, and suitability for different types of cargo.
+#'       \item beam - Provides information about the maximum width of the ship, which is useful in determining its stability, speed and cargo capacity.
+#'       \item gross_tonnage - Provides information about the ship's carrying capacity and volume, and is used to calculate various fees and taxes.
+#'       \item summer_dwt - A measure of its carrying capacity and indicates the maximum weight of cargo and supplies that the ship can safely transport during the summer months.
+#'     }
 #' 
 #' @importFrom httr user_agent
 #' @importFrom dplyr %>%
@@ -92,30 +94,46 @@ from_name <- function(name){
     # Submits search query
     session <- session_submit(session, form[[1]], submit = "")
 
-    # Navigates to the found ship's link
-    session <- session_follow_link(session, xpath = "/html/body/div[1]/div/main/div/table/tbody/tr/td[1]/a")
+    # Checks to see if one or multiple ships were found under the same name
+    num_ships_found <- ""
+    tryCatch(
+        {
+            num_ships_found <- html_element(session, xpath = "/html/body/div[1]/div/main/div/nav[1]/div[1]") %>% html_text()
+        }, error=function(e){
+        }
 
-    # Retrieve IMO and MMSI number
-    imo_mmsi <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[2]/div/div[2]/div/div[2]/table/tbody/tr[7]/td[2]") %>% html_text()
-    imo_mmsi <- str_split_fixed(imo_mmsi, " / ", 2)
-    imo <- imo_mmsi[1]
-    mmsi <- imo_mmsi[2]
+    )
+    
+    # Returns 0 if no ships are found, 1 if multiple are found, and the info if one is found
+    if(is.na(num_ships_found)){
+        return(0)
+    } else if(num_ships_found != "1 ship"){
+        return(1)
+    } else{
+        # Navigates to the found ship's link
+        session <- session_follow_link(session, xpath = "/html/body/div[1]/div/main/div/table/tbody/tr/td[1]/a")
 
-    callsign <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[2]/div/div[2]/div/div[2]/table/tbody/tr[8]/td[2]") %>% html_text()
-    flag <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[2]/div/div[2]/div/div[2]/table/tbody/tr[9]/td[2]") %>% html_text()
-    vessel_name <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[2]/td[2]") %>% html_text()
+        # Retrieve IMO and MMSI number
+        imo_mmsi <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[2]/div/div[2]/div/div[2]/table/tbody/tr[7]/td[2]") %>% html_text()
+        imo_mmsi <- str_split_fixed(imo_mmsi, " / ", 2)
+        imo <- imo_mmsi[1]
+        mmsi <- imo_mmsi[2]
 
-    year_built <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[11]/td[2]") %>% html_text()
+        callsign <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[2]/div/div[2]/div/div[2]/table/tbody/tr[8]/td[2]") %>% html_text()
+        flag <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[2]/div/div[2]/div/div[2]/table/tbody/tr[9]/td[2]") %>% html_text()
+        vessel_name <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[2]/td[2]") %>% html_text()
 
-    # length and beam are measured in metres
-    length <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[8]/td[2]") %>% html_text()
-    beam <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[9]/td[2]") %>% html_text()
+        year_built <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[11]/td[2]") %>% html_text()
 
-    # gross_tonnage and summer_dwt are measured in tons
-    gross_tonnage <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[6]/td[2]") %>% html_text()
-    summer_dwt <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[7]/td[2]") %>% html_text()
+        # length and beam are measured in metres
+        length <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[8]/td[2]") %>% html_text()
+        beam <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[9]/td[2]") %>% html_text()
 
+        # gross_tonnage and summer_dwt are measured in tons
+        gross_tonnage <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[6]/td[2]") %>% html_text()
+        summer_dwt <- html_element(session, xpath = "/html/body/div[1]/div/main/div/section[5]/div/div[1]/table/tbody/tr[7]/td[2]") %>% html_text()
 
-    info <- c(imo, mmsi, callsign, flag, vessel_name, year_built, length, beam, gross_tonnage, summer_dwt)
-    return(info)
+        info <- c(imo, mmsi, callsign, flag, vessel_name, year_built, length, beam, gross_tonnage, summer_dwt)
+        return(info)
+    }    
 }
